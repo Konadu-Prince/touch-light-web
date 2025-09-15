@@ -1,13 +1,13 @@
 const CACHE_NAME = 'light-regulator-v2';
 const ASSETS = [
-  '/',
-  '/index.html',
-  '/style.css',
-  '/script.js',
-  '/manifest.webmanifest',
-  '/favicon.svg',
-  '/icon-192.png',
-  '/icon-512.png'
+  './',
+  './index.html',
+  './style.css',
+  './script.js',
+  './manifest.webmanifest',
+  './favicon.svg',
+  './icon-192.png',
+  './icon-512.png'
 ];
 
 self.addEventListener('install', (event) => {

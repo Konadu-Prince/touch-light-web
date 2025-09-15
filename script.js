@@ -5,6 +5,7 @@ const copyLinkBtn = document.getElementById("copyLinkBtn");
 const resetBtn = document.getElementById("resetBtn");
 const intensityInput = document.getElementById("intensityInput");
 const themeToggleBtn = document.getElementById("themeToggleBtn");
+const installBtn = document.getElementById("installBtn");
 
 const STORAGE_KEY = "light-intensity";
 const THEME_KEY = "theme-preference"; // 'light' | 'dark' | 'auto'
@@ -67,7 +68,8 @@ document.querySelectorAll('.preset').forEach((btn) => {
 // Service worker registration (PWA)
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
-    navigator.serviceWorker.register("/sw.js").catch(() => {});
+    const swUrl = new URL('sw.js', window.location.href).toString();
+    navigator.serviceWorker.register(swUrl).catch(() => {});
   });
 }
 
@@ -102,4 +104,22 @@ themeToggleBtn?.addEventListener('click', () => {
   currentTheme = next;
   try { localStorage.setItem(THEME_KEY, next); } catch {}
   applyTheme(next);
+});
+
+// Install prompt handling
+let deferredPrompt = null;
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  installBtn?.classList.remove('hidden');
+});
+
+installBtn?.addEventListener('click', async () => {
+  if (!deferredPrompt) return;
+  deferredPrompt.prompt();
+  const { outcome } = await deferredPrompt.userChoice;
+  if (outcome) {
+    installBtn.classList.add('hidden');
+  }
+  deferredPrompt = null;
 });

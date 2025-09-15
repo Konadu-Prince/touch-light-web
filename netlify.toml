@@ -1,0 +1,9 @@
+[build]
+  publish = "dist"
+  command = "npm run icons && npm run build"
+
+[[redirects]]
+  from = "/"
+  to = "/index.html"
+  status = 200
+
