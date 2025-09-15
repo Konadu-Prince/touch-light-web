@@ -1,0 +1,16 @@
+{
+  "name": "touch-light-regulator",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "esbuild script.js --bundle --minify --sourcemap --outfile=dist/script.js && cp -f index.html style.css manifest.webmanifest sw.js favicon.svg dist/",
+    "serve": "serve dist -l 8080",
+    "dev": "serve . -l 5173"
+  },
+  "devDependencies": {
+    "esbuild": "^0.23.0",
+    "serve": "^14.2.4"
+  }
+}
+

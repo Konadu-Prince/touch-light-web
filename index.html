@@ -2,17 +2,46 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Adjust virtual light intensity with a simple touch slider.">
+  <meta name="theme-color" content="#0f172a">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <meta property="og:title" content="Touch Light Regulator">
+  <meta property="og:description" content="Adjust virtual light intensity with a simple touch slider.">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary">
   <title>Touch Light Regulator</title>
   <link rel="stylesheet" href="style.css">
+  <noscript>JavaScript is required to use this app.</noscript>
+  
 </head>
 <body>
-  <div class="container">
-    <h1>Touch Light Regulator</h1>
-    <input type="range" min="0" max="255" value="0" id="lightSlider">
-    <p id="intensityLabel">Light Intensity: 0</p>
-    <div id="lightDisplay"></div>
-  </div>
-  <script src="script.js"></script>
+  <main class="container" role="main">
+    <header>
+      <h1>Touch Light Regulator</h1>
+      <p class="subtitle">Slide to adjust intensity. Values sync to URL and are saved locally.</p>
+    </header>
+
+    <form class="controls" aria-describedby="intensityHelp">
+      <label for="lightSlider">Light intensity</label>
+      <input type="range" min="0" max="255" value="0" id="lightSlider" name="intensity" aria-valuemin="0" aria-valuemax="255" aria-valuenow="0">
+      <div class="readout">
+        <output id="intensityLabel" for="lightSlider" aria-live="polite">Light Intensity: 0</output>
+        <button type="button" class="button" id="copyLinkBtn" aria-label="Copy shareable link">Copy link</button>
+      </div>
+      <p id="intensityHelp" class="help">0 is off, 255 is full brightness.</p>
+    </form>
+
+    <section aria-label="Light preview">
+      <div id="lightDisplay" role="img" aria-label="Light intensity preview"></div>
+    </section>
+
+    <footer class="footer">
+      <button type="button" class="link-button" id="resetBtn">Reset</button>
+    </footer>
+  </main>
+
+  <script src="script.js" type="module"></script>
 </body>
 </html>
