@@ -19,17 +19,31 @@
 <body>
   <main class="container" role="main">
     <header>
-      <h1>Touch Light Regulator</h1>
+      <div class="toolbar">
+        <h1>Touch Light Regulator</h1>
+        <button type="button" id="themeToggleBtn" class="button theme-toggle" aria-label="Toggle theme">Theme: Auto</button>
+      </div>
       <p class="subtitle">Slide to adjust intensity. Values sync to URL and are saved locally.</p>
     </header>
 
-    <form class="controls" aria-describedby="intensityHelp">
+    <form class="controls" aria-describedby="intensityHelp" onsubmit="return false;">
       <label for="lightSlider">Light intensity</label>
-      <input type="range" min="0" max="255" value="0" id="lightSlider" name="intensity" aria-valuemin="0" aria-valuemax="255" aria-valuenow="0">
+      <div class="input-row">
+        <input type="range" min="0" max="255" value="0" id="lightSlider" name="intensity" aria-valuemin="0" aria-valuemax="255" aria-valuenow="0">
+        <input type="number" min="0" max="255" step="1" value="0" id="intensityInput" aria-label="Numeric intensity" class="number">
+      </div>
       <div class="readout">
         <output id="intensityLabel" for="lightSlider" aria-live="polite">Light Intensity: 0</output>
         <button type="button" class="button" id="copyLinkBtn" aria-label="Copy shareable link">Copy link</button>
       </div>
+      <fieldset class="presets">
+        <legend class="visually-hidden">Presets</legend>
+        <button type="button" class="button preset" data-value="0">Off</button>
+        <button type="button" class="button preset" data-value="64">64</button>
+        <button type="button" class="button preset" data-value="128">128</button>
+        <button type="button" class="button preset" data-value="192">192</button>
+        <button type="button" class="button preset" data-value="255">Max</button>
+      </fieldset>
       <p id="intensityHelp" class="help">0 is off, 255 is full brightness.</p>
     </form>
 

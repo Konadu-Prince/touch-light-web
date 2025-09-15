@@ -3,8 +3,11 @@ const label = document.getElementById("intensityLabel");
 const display = document.getElementById("lightDisplay");
 const copyLinkBtn = document.getElementById("copyLinkBtn");
 const resetBtn = document.getElementById("resetBtn");
+const intensityInput = document.getElementById("intensityInput");
+const themeToggleBtn = document.getElementById("themeToggleBtn");
 
 const STORAGE_KEY = "light-intensity";
+const THEME_KEY = "theme-preference"; // 'light' | 'dark' | 'auto'
 
 function clamp(value, min, max) {
   return Math.max(min, Math.min(max, value));
@@ -16,6 +19,7 @@ function setIntensity(intensity) {
   slider.setAttribute("aria-valuenow", String(value));
   label.textContent = `Light Intensity: ${value}`;
   display.style.backgroundColor = `rgb(${value}, ${value}, ${value})`;
+  if (intensityInput) intensityInput.value = String(value);
   try { localStorage.setItem(STORAGE_KEY, String(value)); } catch {}
   const url = new URL(window.location.href);
   url.searchParams.set("i", String(value));
@@ -37,6 +41,10 @@ slider.addEventListener("input", () => {
   setIntensity(slider.value);
 });
 
+intensityInput?.addEventListener("input", () => {
+  setIntensity(intensityInput.value);
+});
+
 copyLinkBtn?.addEventListener("click", async () => {
   try {
     await navigator.clipboard.writeText(window.location.href);
@@ -49,6 +57,13 @@ resetBtn?.addEventListener("click", () => {
   setIntensity(0);
 });
 
+document.querySelectorAll('.preset').forEach((btn) => {
+  btn.addEventListener('click', () => {
+    const value = btn.getAttribute('data-value');
+    if (value != null) setIntensity(Number(value));
+  });
+});
+
 // Service worker registration (PWA)
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
@@ -58,3 +73,33 @@ if ("serviceWorker" in navigator) {
 
 // Initialize
 setIntensity(readInitialIntensity());
+
+// Theme handling
+function applyTheme(theme) {
+  const root = document.documentElement;
+  if (theme === 'auto') {
+    root.removeAttribute('data-theme');
+  } else {
+    root.setAttribute('data-theme', theme);
+  }
+  if (themeToggleBtn) themeToggleBtn.textContent = `Theme: ${theme[0].toUpperCase()}${theme.slice(1)}`;
+}
+
+function getInitialTheme() {
+  try {
+    const stored = localStorage.getItem(THEME_KEY);
+    if (stored === 'light' || stored === 'dark' || stored === 'auto') return stored;
+  } catch {}
+  return 'auto';
+}
+
+let currentTheme = getInitialTheme();
+applyTheme(currentTheme);
+
+themeToggleBtn?.addEventListener('click', () => {
+  const order = ['auto', 'light', 'dark'];
+  const next = order[(order.indexOf(currentTheme) + 1) % order.length];
+  currentTheme = next;
+  try { localStorage.setItem(THEME_KEY, next); } catch {}
+  applyTheme(next);
+});

@@ -4,13 +4,15 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "esbuild script.js --bundle --minify --sourcemap --outfile=dist/script.js && cp -f index.html style.css manifest.webmanifest sw.js favicon.svg dist/",
+    "icons": "node scripts/generate-icons.mjs",
+    "build": "esbuild script.js --bundle --minify --sourcemap --outfile=dist/script.js && cp -f index.html style.css manifest.webmanifest sw.js favicon.svg icon-192.png icon-512.png dist/",
     "serve": "serve dist -l 8080",
     "dev": "serve . -l 5173"
   },
   "devDependencies": {
     "esbuild": "^0.23.0",
-    "serve": "^14.2.4"
+    "serve": "^14.2.4",
+    "sharp": "^0.33.5"
   }
 }
 
