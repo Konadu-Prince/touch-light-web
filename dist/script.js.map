@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../script.js"],
+  "sourcesContent": ["const slider = document.getElementById(\"lightSlider\");\nconst label = document.getElementById(\"intensityLabel\");\nconst display = document.getElementById(\"lightDisplay\");\n\nslider.addEventListener(\"input\", () => {\n  const intensity = slider.value;\n  label.textContent = `Light Intensity: ${intensity}`;\n  \n  // Change the light display color based on intensity\n  display.style.backgroundColor = `rgb(${intensity}, ${intensity}, ${intensity})`;\n});\n"],
+  "mappings": "MAAA,IAAMA,EAAS,SAAS,eAAe,aAAa,EAC9CC,EAAQ,SAAS,eAAe,gBAAgB,EAChDC,EAAU,SAAS,eAAe,cAAc,EAEtDF,EAAO,iBAAiB,QAAS,IAAM,CACrC,IAAMG,EAAYH,EAAO,MACzBC,EAAM,YAAc,oBAAoBE,CAAS,GAGjDD,EAAQ,MAAM,gBAAkB,OAAOC,CAAS,KAAKA,CAAS,KAAKA,CAAS,GAC9E,CAAC",
+  "names": ["slider", "label", "display", "intensity"]
+}
