@@ -6,6 +6,12 @@ const resetBtn = document.getElementById("resetBtn");
 const intensityInput = document.getElementById("intensityInput");
 const themeToggleBtn = document.getElementById("themeToggleBtn");
 const installBtn = document.getElementById("installBtn");
+const cameraTorchBtn = document.getElementById('cameraTorchBtn');
+const stopCameraBtn = document.getElementById('stopCameraBtn');
+const torchSupportMsg = document.getElementById('torchSupportMsg');
+const screenTorchBtn = document.getElementById('screenTorchBtn');
+const screenTorchLevel = document.getElementById('screenTorchLevel');
+const screenTorchOverlay = document.getElementById('screenTorchOverlay');
 
 const STORAGE_KEY = "light-intensity";
 const THEME_KEY = "theme-preference"; // 'light' | 'dark' | 'auto'
@@ -122,4 +128,72 @@ installBtn?.addEventListener('click', async () => {
     installBtn.classList.add('hidden');
   }
   deferredPrompt = null;
+});
+
+// Torch feature: camera LED
+let mediaStream = null;
+async function enableCameraTorch() {
+  if (!('mediaDevices' in navigator) || !navigator.mediaDevices.getUserMedia) {
+    torchSupportMsg.textContent = 'Camera API not supported on this device.';
+    return;
+  }
+  try {
+    // Request rear camera if available
+    mediaStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: { ideal: 'environment' } } });
+    const track = mediaStream.getVideoTracks()[0];
+    const capabilities = track.getCapabilities?.() || {};
+    if (!('torch' in capabilities)) {
+      torchSupportMsg.textContent = 'Torch capability not available. Some devices/browsers do not expose it.';
+      return;
+    }
+    await track.applyConstraints({ advanced: [{ torch: true }] });
+    torchSupportMsg.textContent = 'Camera torch enabled. Keep the page open to maintain torch.';
+  } catch (err) {
+    torchSupportMsg.textContent = 'Could not enable camera torch (permission or capability).';
+  }
+}
+
+function stopCamera() {
+  if (mediaStream) {
+    mediaStream.getTracks().forEach(t => t.stop());
+    mediaStream = null;
+    torchSupportMsg.textContent = 'Camera stopped.';
+  }
+}
+
+cameraTorchBtn?.addEventListener('click', enableCameraTorch);
+stopCameraBtn?.addEventListener('click', stopCamera);
+
+// Torch feature: screen torch + wake lock
+let wakeLock = null;
+async function requestWakeLock() {
+  try {
+    if ('wakeLock' in navigator) {
+      wakeLock = await navigator.wakeLock.request('screen');
+      wakeLock.addEventListener('release', () => { /* no-op */ });
+    }
+  } catch {}
+}
+
+function setScreenTorch(on) {
+  if (!screenTorchOverlay) return;
+  if (on) {
+    screenTorchOverlay.hidden = false;
+    screenTorchOverlay.style.opacity = '1';
+    requestWakeLock();
+  } else {
+    screenTorchOverlay.hidden = true;
+    if (wakeLock) { try { wakeLock.release(); } catch {} finally { wakeLock = null; } }
+  }
+}
+
+screenTorchBtn?.addEventListener('click', () => {
+  const isOn = !!screenTorchOverlay && !screenTorchOverlay.hidden;
+  setScreenTorch(!isOn);
+});
+
+screenTorchLevel?.addEventListener('input', () => {
+  const level = Math.max(0, Math.min(100, Number(screenTorchLevel.value) || 0));
+  // simulate brightness by opacity blend over underlying UI
+  screenTorchOverlay.style.opacity = String(level / 100);
 });

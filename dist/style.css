@@ -154,4 +154,15 @@ input[type="range"]::-moz-range-thumb {
 .help { color: var(--muted); margin: 0; }
 
 .footer { margin-top: 16px; display: flex; justify-content: flex-end; }
+
+.section-title { margin: 24px 0 8px 0; font-size: 18px; color: var(--muted); }
+.torch-row { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 12px; margin: 8px 0; }
+
+#screenTorchOverlay[hidden] { display: none; }
+#screenTorchOverlay {
+    position: fixed;
+    inset: 0;
+    background: #ffffff;
+    z-index: 9999;
+}
   

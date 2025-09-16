@@ -55,8 +55,23 @@
     <footer class="footer">
       <button type="button" class="link-button" id="resetBtn">Reset</button>
     </footer>
+
+    <section class="torch" aria-label="Torch controls">
+      <h2 class="section-title">Torch</h2>
+      <div class="torch-row">
+        <button type="button" id="cameraTorchBtn" class="button">Enable camera torch</button>
+        <button type="button" id="stopCameraBtn" class="link-button">Stop camera</button>
+      </div>
+      <p class="help" id="torchSupportMsg">Camera torch not requested yet.</p>
+      <div class="torch-row">
+        <button type="button" id="screenTorchBtn" class="button">Screen torch</button>
+        <label class="visually-hidden" for="screenTorchLevel">Screen torch level</label>
+        <input type="range" id="screenTorchLevel" min="0" max="100" value="100">
+      </div>
+    </section>
   </main>
 
   <script src="script.js" type="module"></script>
+  <div id="screenTorchOverlay" hidden></div>
 </body>
 </html>
